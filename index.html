@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>河南信育电子科技有限公司 - 智慧教育装备综合服务</title>
+    <style>
+        /* ===== 基础重置 ===== */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; color: #1a202c; background: #fff; line-height: 1.6; }
+        a { text-decoration: none; color: inherit; }
+        img { max-width: 100%; display: block; }
+
+        /* ===== CSS变量 ===== */
+        :root {
+            --blue-deep:  #0f2d57;
+            --blue-mid:   #1a4a8a;
+            --blue-light: #2563eb;
+            --teal:       #0891b2;
+            --gold:       #d97706;
+            --gray-50:    #f8fafc;
+            --gray-100:   #f1f5f9;
+            --gray-200:   #e2e8f0;
+            --gray-500:   #64748b;
+            --gray-700:   #334155;
+            --white:      #ffffff;
+            --shadow-sm:  0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
+            --shadow-md:  0 4px 16px rgba(0,0,0,.10);
+            --shadow-lg:  0 10px 40px rgba(0,0,0,.14);
+            --radius:     12px;
+        }
+
+        /* ===== 顶部导航 ===== */
+        .nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            background: rgba(15,45,87,.96);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255,255,255,.1);
+            padding: 0 6%;
+            display: flex; align-items: center; justify-content: space-between;
+            height: 68px;
+        }
+        .nav-logo { display: flex; align-items: center; gap: 14px; }
+        .nav-logo-img {
+            height: 44px; width: auto;
+            display: block;
+            /* logo 是彩色透明底，直接展示 */
+            filter: drop-shadow(0 1px 4px rgba(0,0,0,.35));
+        }
+        .nav-logo-divider {
+            width: 1px; height: 32px;
+            background: rgba(255,255,255,.2);
+        }
+        .nav-logo-text { color: white; }
+        .nav-logo-text h1 { font-size: 16px; font-weight: 700; letter-spacing: .5px; }
+        .nav-logo-text p { font-size: 11px; opacity: .65; letter-spacing: .5px; }
+        .nav-links { display: flex; gap: 32px; }
+        .nav-links a { color: rgba(255,255,255,.8); font-size: 14px; transition: color .2s; }
+        .nav-links a:hover { color: white; }
+        .nav-contact {
+            background: linear-gradient(135deg, var(--blue-light), var(--teal));
+            color: white; padding: 8px 20px; border-radius: 20px; font-size: 13px;
+            display: flex; align-items: center; gap: 6px;
+        }
+
+        /* ===== Hero ===== */
+        .hero {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0a1628 0%, #0f2d57 45%, #1a4a8a 100%);
+            display: flex; align-items: center;
+            position: relative; overflow: hidden;
+            padding-top: 68px;
+        }
+        .hero::before {
+            content: ''; position: absolute; inset: 0;
+            background:
+                radial-gradient(ellipse 60% 50% at 80% 50%, rgba(37,99,235,.25) 0%, transparent 70%),
+                radial-gradient(ellipse 40% 60% at 10% 80%, rgba(8,145,178,.15) 0%, transparent 60%);
+        }
+        /* 几何装饰 */
+        .hero-deco {
+            position: absolute; inset: 0; overflow: hidden; pointer-events: none;
+        }
+        .hero-deco-circle {
+            position: absolute; border-radius: 50%;
+            border: 1px solid rgba(255,255,255,.07);
+        }
+        .hero-deco-circle:nth-child(1) { width: 600px; height: 600px; right: -150px; top: -100px; }
+        .hero-deco-circle:nth-child(2) { width: 400px; height: 400px; right: -30px; top: 40px; }
+        .hero-deco-circle:nth-child(3) { width: 200px; height: 200px; right: 120px; top: 160px; }
+        .hero-grid-line {
+            position: absolute; left: 0; right: 0;
+            border-top: 1px solid rgba(255,255,255,.04);
+        }
+
+        .hero-inner { position: relative; z-index: 1; width: 100%; padding: 0 6%; display: flex; align-items: center; gap: 80px; }
+        .hero-content { flex: 1; max-width: 620px; }
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: rgba(37,99,235,.3); border: 1px solid rgba(37,99,235,.5);
+            color: #93c5fd; font-size: 13px; padding: 6px 14px; border-radius: 20px;
+            margin-bottom: 28px;
+        }
+        .hero-badge span { width: 6px; height: 6px; background: #60a5fa; border-radius: 50%; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.8)} }
+        .hero-title { font-size: clamp(32px, 4vw, 52px); font-weight: 800; color: white; line-height: 1.2; margin-bottom: 20px; }
+        .hero-title .accent { background: linear-gradient(90deg, #60a5fa, #22d3ee); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero-subtitle { font-size: 18px; color: rgba(255,255,255,.7); line-height: 1.8; margin-bottom: 40px; }
+        .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; }
+        .btn-primary {
+            background: linear-gradient(135deg, #2563eb, #0891b2);
+            color: white; padding: 14px 32px; border-radius: 8px; font-size: 15px; font-weight: 600;
+            box-shadow: 0 4px 20px rgba(37,99,235,.4); transition: all .3s;
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(37,99,235,.5); }
+        .btn-ghost {
+            border: 1.5px solid rgba(255,255,255,.3); color: white;
+            padding: 14px 32px; border-radius: 8px; font-size: 15px;
+            transition: all .3s;
+        }
+        .btn-ghost:hover { background: rgba(255,255,255,.1); }
+        .hero-stats { display: flex; gap: 48px; margin-top: 56px; }
+        .hero-stat { }
+        .hero-stat-num { font-size: 36px; font-weight: 800; color: white; }
+        .hero-stat-num span { font-size: 18px; color: #60a5fa; }
+        .hero-stat-label { color: rgba(255,255,255,.55); font-size: 13px; margin-top: 2px; }
+
+        .hero-visual { flex: 0 0 480px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .hero-img-card {
+            border-radius: 16px; overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,.4);
+            border: 1px solid rgba(255,255,255,.1);
+        }
+        .hero-img-card:first-child { grid-column: 1 / -1; }
+        .hero-img-card img { width: 100%; height: 220px; object-fit: cover; }
+        .hero-img-card:first-child img { height: 280px; }
+
+        /* ===== Section通用 ===== */
+        .section { padding: 96px 6%; }
+        .section-alt { background: var(--gray-50); }
+        .section-header { text-align: center; margin-bottom: 64px; }
+        .section-tag {
+            display: inline-block; background: #eff6ff; color: var(--blue-light);
+            padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 500;
+            margin-bottom: 16px;
+        }
+        .section-title { font-size: clamp(26px,3vw,38px); font-weight: 800; color: var(--blue-deep); margin-bottom: 16px; }
+        .section-desc { font-size: 16px; color: var(--gray-500); max-width: 560px; margin: 0 auto; }
+
+        /* ===== 产品区块 ===== */
+        .products-tabs {
+            display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 48px;
+        }
+        .tab-btn {
+            padding: 10px 24px; border-radius: 24px; font-size: 14px; cursor: pointer;
+            border: 1.5px solid var(--gray-200); color: var(--gray-500);
+            background: white; transition: all .25s;
+        }
+        .tab-btn.active, .tab-btn:hover {
+            background: var(--blue-deep); color: white; border-color: var(--blue-deep);
+        }
+
+        .product-showcase { display: none; }
+        .product-showcase.active { display: grid; }
+
+        .product-grid-2 { grid-template-columns: 1fr 1fr; gap: 32px; align-items: center; }
+        .product-grid-3 { grid-template-columns: repeat(3,1fr); gap: 28px; }
+
+        .product-img-box {
+            border-radius: var(--radius); overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+        }
+        .product-img-box img { width: 100%; height: 400px; object-fit: cover; }
+        .product-img-badge {
+            position: absolute; top: 16px; left: 16px;
+            background: rgba(15,45,87,.85); backdrop-filter: blur(8px);
+            color: white; padding: 6px 14px; border-radius: 20px; font-size: 12px;
+            border: 1px solid rgba(255,255,255,.2);
+        }
+
+        .product-info { padding: 16px 0; }
+        .product-category { color: var(--blue-light); font-size: 13px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; }
+        .product-name { font-size: 28px; font-weight: 800; color: var(--blue-deep); margin-bottom: 16px; }
+        .product-desc { color: var(--gray-500); line-height: 1.8; margin-bottom: 28px; font-size: 15px; }
+        .product-features { display: flex; flex-direction: column; gap: 10px; }
+        .product-feature {
+            display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--gray-700);
+        }
+        .product-feature::before {
+            content: ''; width: 8px; height: 8px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--blue-light), var(--teal));
+            flex-shrink: 0;
+        }
+
+        /* 卡片式产品 */
+        .product-card-v2 {
+            background: white; border-radius: var(--radius);
+            box-shadow: var(--shadow-sm); border: 1px solid var(--gray-200);
+            overflow: hidden; transition: all .3s;
+        }
+        .product-card-v2:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
+        .product-card-v2 img { width: 100%; height: 220px; object-fit: cover; }
+        .product-card-v2-body { padding: 24px; }
+        .product-card-v2-tag {
+            display: inline-block; background: #eff6ff; color: var(--blue-light);
+            padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; margin-bottom: 10px;
+        }
+        .product-card-v2-title { font-size: 18px; font-weight: 700; color: var(--blue-deep); margin-bottom: 8px; }
+        .product-card-v2-desc { font-size: 13px; color: var(--gray-500); line-height: 1.7; }
+
+        /* ===== 业务方向 ===== */
+        .directions { display: grid; grid-template-columns: repeat(3,1fr); gap: 32px; }
+        .direction-card {
+            background: white; border-radius: var(--radius); padding: 40px 32px;
+            box-shadow: var(--shadow-sm); border: 1px solid var(--gray-200);
+            transition: all .3s; text-align: center;
+        }
+        .direction-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); border-color: var(--blue-light); }
+        .direction-icon-wrap {
+            width: 72px; height: 72px; margin: 0 auto 24px;
+            background: linear-gradient(135deg, var(--blue-deep), var(--blue-light));
+            border-radius: 20px; display: flex; align-items: center; justify-content: center;
+        }
+        .direction-icon-wrap svg { width: 36px; height: 36px; fill: white; }
+        .direction-card h3 { font-size: 20px; font-weight: 700; color: var(--blue-deep); margin-bottom: 14px; }
+        .direction-card p { font-size: 14px; color: var(--gray-500); line-height: 1.8; }
+
+        /* ===== 案例展示 ===== */
+        .cases-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; }
+        .case-card {
+            background: white; border-radius: var(--radius); overflow: hidden;
+            box-shadow: var(--shadow-sm); border: 1px solid var(--gray-200);
+            transition: all .3s; cursor: pointer;
+        }
+        .case-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+        .case-card-img { position: relative; overflow: hidden; }
+        .case-card-img img { width: 100%; height: 200px; object-fit: cover; transition: transform .4s; }
+        .case-card:hover .case-card-img img { transform: scale(1.05); }
+        .case-card-overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(to top, rgba(15,45,87,.7) 0%, transparent 60%);
+            opacity: 0; transition: opacity .3s;
+        }
+        .case-card:hover .case-card-overlay { opacity: 1; }
+        .case-card-body { padding: 20px; }
+        .case-tag {
+            display: inline-block; background: #eff6ff; color: var(--blue-light);
+            padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; margin-bottom: 8px;
+        }
+        .case-card h3 { font-size: 16px; font-weight: 700; color: var(--blue-deep); margin-bottom: 6px; }
+        .case-card p { font-size: 13px; color: var(--gray-500); line-height: 1.6; }
+
+        /* ===== 合作优势 ===== */
+        .advantages { display: grid; grid-template-columns: repeat(4,1fr); gap: 28px; }
+        .advantage-item {
+            text-align: center; padding: 36px 20px;
+            background: white; border-radius: var(--radius);
+            box-shadow: var(--shadow-sm); border: 1px solid var(--gray-200);
+            transition: all .3s;
+        }
+        .advantage-item:hover { border-color: var(--blue-light); transform: translateY(-4px); }
+        .advantage-num { font-size: 48px; font-weight: 900; color: var(--blue-light); line-height: 1; margin-bottom: 8px; }
+        .advantage-num span { font-size: 24px; }
+        .advantage-item h4 { font-size: 15px; font-weight: 700; color: var(--blue-deep); margin-bottom: 8px; }
+        .advantage-item p { font-size: 13px; color: var(--gray-500); }
+
+        /* ===== 联系我们 ===== */
+        .contact-section {
+            background: linear-gradient(135deg, #0a1628, #0f2d57, #1a4a8a);
+            padding: 96px 6%; position: relative; overflow: hidden;
+        }
+        .contact-section::before {
+            content: ''; position: absolute; inset: 0;
+            background: radial-gradient(ellipse 60% 70% at 80% 50%, rgba(37,99,235,.2) 0%, transparent 70%);
+        }
+        .contact-inner { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+        .contact-left h2 { font-size: 38px; font-weight: 800; color: white; margin-bottom: 20px; }
+        .contact-left p { color: rgba(255,255,255,.7); line-height: 1.8; margin-bottom: 48px; font-size: 15px; }
+        .contact-items { display: flex; flex-direction: column; gap: 24px; }
+        .contact-item {
+            display: flex; align-items: center; gap: 16px;
+            background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.12);
+            border-radius: 12px; padding: 20px 24px;
+        }
+        .contact-item-icon {
+            width: 48px; height: 48px; background: linear-gradient(135deg, var(--blue-light), var(--teal));
+            border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .contact-item-icon svg { width: 22px; height: 22px; fill: white; }
+        .contact-item-text { }
+        .contact-item-label { font-size: 12px; color: rgba(255,255,255,.5); margin-bottom: 3px; }
+        .contact-item-value { font-size: 16px; color: white; font-weight: 600; }
+
+        .contact-right {
+            background: white; border-radius: 20px; padding: 48px 40px;
+            box-shadow: 0 40px 80px rgba(0,0,0,.3);
+        }
+        .contact-right h3 { font-size: 22px; font-weight: 800; color: var(--blue-deep); margin-bottom: 8px; }
+        .contact-right > p { color: var(--gray-500); font-size: 14px; margin-bottom: 32px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; font-size: 13px; color: var(--gray-700); font-weight: 600; margin-bottom: 6px; }
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%; padding: 12px 14px; border: 1.5px solid var(--gray-200); border-radius: 8px;
+            font-size: 14px; color: var(--gray-700); background: var(--gray-50);
+            transition: border-color .2s; outline: none;
+            font-family: inherit;
+        }
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: var(--blue-light); background: white; }
+        .form-group textarea { resize: vertical; min-height: 100px; }
+        .form-submit {
+            width: 100%; padding: 14px; background: linear-gradient(135deg, var(--blue-deep), var(--blue-light));
+            color: white; border: none; border-radius: 8px; font-size: 15px; font-weight: 700;
+            cursor: pointer; transition: all .3s; margin-top: 8px;
+        }
+        .form-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(37,99,235,.4); }
+
+        /* ===== Footer ===== */
+        footer {
+            background: #060f1e; color: rgba(255,255,255,.5);
+            padding: 40px 6%;
+            display: flex; align-items: center; justify-content: space-between;
+            font-size: 13px;
+        }
+        .footer-logo { display: flex; align-items: center; gap: 12px; }
+        .footer-logo-img {
+            height: 36px; width: auto;
+            filter: brightness(0) invert(1) opacity(.7);
+        }
+        .footer-logo span { color: rgba(255,255,255,.7); font-size: 14px; }
+
+        /* ===== 手机端 ===== */
+        @media (max-width: 1024px) {
+            .hero-visual { display: none; }
+            .product-grid-2 { grid-template-columns: 1fr; }
+            .directions { grid-template-columns: 1fr 1fr; }
+            .cases-grid { grid-template-columns: 1fr 1fr; }
+            .advantages { grid-template-columns: 1fr 1fr; }
+            .contact-inner { grid-template-columns: 1fr; }
+            .nav-links { display: none; }
+        }
+        @media (max-width: 640px) {
+            .directions { grid-template-columns: 1fr; }
+            .cases-grid { grid-template-columns: 1fr; }
+            .advantages { grid-template-columns: 1fr 1fr; }
+            .product-grid-3 { grid-template-columns: 1fr; }
+            .hero-stats { gap: 28px; flex-wrap: wrap; }
+            .form-row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ===== 导航 ===== -->
+<nav class="nav">
+    <div class="nav-logo">
+        <img class="nav-logo-img" src="logo/logo.png" alt="信育电子科技">
+        <div class="nav-logo-divider"></div>
+        <div class="nav-logo-text">
+            <h1>信育电子科技</h1>
+            <p>智慧教育装备综合服务</p>
+        </div>
+    </div>
+    <div class="nav-links">
+        <a href="#products">产品服务</a>
+        <a href="#directions">业务方向</a>
+        <a href="#cases">成功案例</a>
+        <a href="#contact">联系我们</a>
+    </div>
+    <a href="tel:13592600688" class="nav-contact">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.3 1l-2.2 2.2z"/></svg>
+        13592600688
+    </a>
+</nav>
+
+<!-- ===== Hero ===== -->
+<section class="hero" id="home">
+    <div class="hero-deco">
+        <div class="hero-deco-circle"></div>
+        <div class="hero-deco-circle"></div>
+        <div class="hero-deco-circle"></div>
+        <div class="hero-grid-line" style="top:25%"></div>
+        <div class="hero-grid-line" style="top:50%"></div>
+        <div class="hero-grid-line" style="top:75%"></div>
+    </div>
+    <div class="hero-inner">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span></span>
+                智慧教育 · 专业赋能
+            </div>
+            <h1 class="hero-title">
+                河南信育<br>
+                <span class="accent">电子科技</span><br>
+                有限公司
+            </h1>
+            <p class="hero-subtitle">
+                智慧教育装备与实验教学系统建设综合服务企业<br>
+                专注教育科技，赋能未来课堂
+            </p>
+            <div class="hero-btns">
+                <a href="#products" class="btn-primary">了解产品方案</a>
+                <a href="#contact" class="btn-ghost">联系我们</a>
+            </div>
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <div class="hero-stat-num">6<span>+</span></div>
+                    <div class="hero-stat-label">核心产品线</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-num">3</div>
+                    <div class="hero-stat-label">业务方向</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-num">100<span>%</span></div>
+                    <div class="hero-stat-label">专业定制服务</div>
+                </div>
+            </div>
+        </div>
+        <div class="hero-visual">
+            <div class="hero-img-card">
+                <img src="images/xinxiang-chem-lab.png" alt="新乡十中化学通风实验室">
+            </div>
+            <div class="hero-img-card">
+                <img src="images/xinxiang-bio-prep1.png" alt="生物仪器准备室">
+            </div>
+            <div class="hero-img-card">
+                <img src="images/lenhu-lab.jpg" alt="冷湖5D物理实验室">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== 业务方向 ===== -->
+<section class="section" id="directions">
+    <div class="section-header">
+        <div class="section-tag">核心业务</div>
+        <h2 class="section-title">三大业务方向</h2>
+        <p class="section-desc">从实验室建设到智能感知，从AI教学到售后服务，提供教育科技全链路解决方案</p>
+    </div>
+    <div class="directions">
+        <div class="direction-card">
+            <div class="direction-icon-wrap">
+                <svg viewBox="0 0 24 24"><path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 16l-5 2.73-5-2.73v-3.72L12 15l5-2.73V16z"/></svg>
+            </div>
+            <h3>实验室体系建设</h3>
+            <p>提供从规划、设计到施工验收的全流程实验室建设服务，涵盖物理、化学、生物、数学等各类专业实验室，打造标准化、现代化的实验教学环境。</p>
+        </div>
+        <div class="direction-card">
+            <div class="direction-icon-wrap">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+            </div>
+            <h3>智能感知设备</h3>
+            <p>代理引进PASCO、朗威等国际先进品牌的传感器与数据采集系统，为实验教学提供精准、可靠的智能感知解决方案，助力探究式教学。</p>
+        </div>
+        <div class="direction-card">
+            <div class="direction-icon-wrap">
+                <svg viewBox="0 0 24 24"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>
+            </div>
+            <h3>AI 教学应用</h3>
+            <p>引入人工智能技术赋能体育教学，通过大沩AI体育生态系统实现智能化体育教学管理，以科技手段提升教学效率与学生体质健康水平。</p>
+        </div>
+    </div>
+</section>
+
+<!-- ===== 产品服务 ===== -->
+<section class="section section-alt" id="products">
+    <div class="section-header">
+        <div class="section-tag">产品与服务</div>
+        <h2 class="section-title">核心产品矩阵</h2>
+        <p class="section-desc">多年深耕教育装备领域，为各类学校提供专业的实验教学解决方案</p>
+    </div>
+    <div class="products-tabs">
+        <button class="tab-btn active" onclick="showProduct('lab')">实验室建设</button>
+        <button class="tab-btn" onclick="showProduct('xinxiang')">理化生实验室</button>
+        <button class="tab-btn" onclick="showProduct('pasco')">PASCO传感器</button>
+        <button class="tab-btn" onclick="showProduct('bio')">生物学课程中心</button>
+    </div>
+
+    <!-- 实验室建设 -->
+    <div class="product-showcase active" id="prod-lab">
+        <div class="product-grid-2">
+            <div class="product-img-box">
+                <img src="images/lenhu-lab.jpg" alt="冷湖5D物理实验室">
+                <div class="product-img-badge">🔬 实景展示</div>
+            </div>
+            <div class="product-info">
+                <div class="product-category">实验室整体解决方案</div>
+                <h3 class="product-name">冷湖 5D 物理实验室</h3>
+                <p class="product-desc">
+                    冷湖5D物理实验室是信育电子科技倾力打造的沉浸式实验教学空间。融合数字化传感系统与可视化数据平台，将抽象的物理概念转化为直观的实验体验，让学生在探究中理解科学。
+                </p>
+                <div class="product-features">
+                    <div class="product-feature">5D沉浸式实验环境，多感官学习体验</div>
+                    <div class="product-feature">智能传感器实时采集，数据可视化呈现</div>
+                    <div class="product-feature">模块化布局设计，灵活适配不同课程需求</div>
+                    <div class="product-feature">符合国家标准，通过教育部门专业验收</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 中学理化生实验室 -->
+    <div class="product-showcase" id="prod-xinxiang">
+        <div class="product-grid-2">
+            <div class="product-img-box">
+                <img src="images/xinxiang-chem-lab.png" alt="新乡十中化学通风实验室">
+                <div class="product-img-badge">⚗️ 化学通风实验室</div>
+            </div>
+            <div class="product-info">
+                <div class="product-category">中学 · 理化生整体方案</div>
+                <h3 class="product-name">理化生实验室建设方案</h3>
+                <p class="product-desc">
+                    为中学量身定制的理化生实验室整体解决方案，涵盖化学通风实验室、生物仪器准备室等多功能空间。以现代化设计理念为基础，融合专业实验教学需求，打造安全、高效的学科实验环境。
+                </p>
+                <div class="product-features">
+                    <div class="product-feature">化学通风实验室：集中排风系统，通风管道规范布局</div>
+                    <div class="product-feature">生物仪器准备室：双通道分区，仪器陈列标准化管理</div>
+                    <div class="product-feature">实验台岛式布局，最大化学生操作空间</div>
+                    <div class="product-feature">科学文化墙设计，营造浓郁学科学习氛围</div>
+                    <div class="product-feature">全套设备采购、安装、验收一体化服务</div>
+                </div>
+            </div>
+        </div>
+        <div style="margin-top: 32px;">
+            <div class="product-grid-3" style="display:grid;">
+                <div class="product-card-v2">
+                    <img src="images/xinxiang-chem-lab.png" alt="化学通风实验室">
+                    <div class="product-card-v2-body">
+                        <span class="product-card-v2-tag">化学实验室</span>
+                        <h4 class="product-card-v2-title">化学通风实验室</h4>
+                        <p class="product-card-v2-desc">中央通风管道系统配合实验台独立排风，确保安全实验环境，左侧文化墙强化学科认知。</p>
+                    </div>
+                </div>
+                <div class="product-card-v2">
+                    <img src="images/xinxiang-bio-prep1.png" alt="生物仪器准备室近景">
+                    <div class="product-card-v2-body">
+                        <span class="product-card-v2-tag">生物准备室</span>
+                        <h4 class="product-card-v2-title">生物仪器准备室（近景）</h4>
+                        <p class="product-card-v2-desc">绿色系储物柜整齐排列，中央岛式操作台设计合理，空间利用率高，满足日常仪器管理需求。</p>
+                    </div>
+                </div>
+                <div class="product-card-v2">
+                    <img src="images/xinxiang-bio-prep2.png" alt="生物仪器准备室全景">
+                    <div class="product-card-v2-body">
+                        <span class="product-card-v2-tag">生物准备室</span>
+                        <h4 class="product-card-v2-title">生物仪器准备室（全景）</h4>
+                        <p class="product-card-v2-desc">宽敞明亮的全景视角，双侧储柜与中央操作台布局，展示柜与实验台功能分区清晰，专业规范。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PASCO传感器 -->
+    <div class="product-showcase" id="prod-pasco">
+        <div class="product-grid-3">
+            <div class="product-card-v2">
+                <img src="images/pasco-15.jpg" alt="PASCO传感器系统">
+                <div class="product-card-v2-body">
+                    <span class="product-card-v2-tag">PASCO 官方授权</span>
+                    <h4 class="product-card-v2-title">PASCO 传感器与采集系统</h4>
+                    <p class="product-card-v2-desc">美国PASCO公司旗舰级传感器产品，覆盖物理、化学、生物全学科，精度高、兼容性强，是探究式实验教学的首选工具。</p>
+                </div>
+            </div>
+            <div class="product-card-v2">
+                <img src="images/pasco-18.jpg" alt="PASCO教育方案">
+                <div class="product-card-v2-body">
+                    <span class="product-card-v2-tag">整体教学方案</span>
+                    <h4 class="product-card-v2-title">PASCO 教育解决方案</h4>
+                    <p class="product-card-v2-desc">提供从硬件配置、软件培训到课程资源的一体化教育解决方案，帮助学校快速落地探究实验教学模式。</p>
+                </div>
+            </div>
+            <div class="product-card-v2">
+                <img src="images/pasco-19.jpg" alt="PASCO应用场景">
+                <div class="product-card-v2-body">
+                    <span class="product-card-v2-tag">多场景应用</span>
+                    <h4 class="product-card-v2-title">智能数据采集平台</h4>
+                    <p class="product-card-v2-desc">配套Capstone数据分析软件，支持实验数据实时可视化、图表分析与报告生成，提升实验教学的科学性与趣味性。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 生物学课程中心 -->
+    <div class="product-showcase" id="prod-bio">
+        <div class="product-grid-2">
+            <div class="product-info">
+                <div class="product-category">上海大风 · 精品实验室</div>
+                <h3 class="product-name">生物学课程中心</h3>
+                <p class="product-desc">
+                    以鹤壁一中生物学课程中心为代表的大风系列实验室，从空间规划到设备配置，以国际化标准打造高端生物实验教学环境，培养学生的科学素养与实验技能。
+                </p>
+                <div class="product-features">
+                    <div class="product-feature">国际标准实验室设计规范</div>
+                    <div class="product-feature">专业生物实验设备全套配置</div>
+                    <div class="product-feature">标本展示区与解剖实验区融合设计</div>
+                    <div class="product-feature">配套数字化显微观察系统</div>
+                    <div class="product-feature">课程资源与教师培训一体化服务</div>
+                </div>
+            </div>
+            <div class="product-img-box">
+                <img src="images/dafeng-07.jpg" alt="生物学课程中心">
+                <div class="product-img-badge">🏫 鹤壁一中 · 实景</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== 成功案例 ===== -->
+<section class="section" id="cases">
+    <div class="section-header">
+        <div class="section-tag">成功案例</div>
+        <h2 class="section-title">服务学校案例</h2>
+        <p class="section-desc">深耕河南教育科技市场，助力多所学校实现教学环境现代化升级</p>
+    </div>
+    <div class="cases-grid">
+        <div class="case-card">
+            <div class="case-card-img">
+                <img src="images/lenhu-lab.jpg" alt="冷湖实验室">
+                <div class="case-card-overlay"></div>
+            </div>
+            <div class="case-card-body">
+                <span class="case-tag">实验室建设</span>
+                <h3>冷湖实验室系统建设</h3>
+                <p>5D沉浸式物理实验室，整体建设，打造全新探究式学习空间</p>
+            </div>
+        </div>
+        <div class="case-card">
+            <div class="case-card-img">
+                <img src="images/dafeng-07.jpg" alt="鹤壁一中">
+                <div class="case-card-overlay"></div>
+            </div>
+            <div class="case-card-body">
+                <span class="case-tag">上海大风方案</span>
+                <h3>鹤壁一中生物学课程中心</h3>
+                <p>高规格生物实验教学环境，国际标准设计，全套设备配置</p>
+            </div>
+        </div>
+        <div class="case-card">
+            <div class="case-card-img">
+                <img src="images/dafeng-31.jpg" alt="实验室内景">
+                <div class="case-card-overlay"></div>
+            </div>
+            <div class="case-card-body">
+                <span class="case-tag">课程中心</span>
+                <h3>生物实验教学功能区</h3>
+                <p>标本展示、解剖实验、数字显微多功能区一体化布局</p>
+            </div>
+        </div>
+        <div class="case-card">
+            <div class="case-card-img">
+                <img src="images/pasco-15.jpg" alt="PASCO配置">
+                <div class="case-card-overlay"></div>
+            </div>
+            <div class="case-card-body">
+                <span class="case-tag">智能感知</span>
+                <h3>PASCO传感器整校配置</h3>
+                <p>全学科传感器设备配置，覆盖物理、化学、生物实验需求</p>
+            </div>
+        </div>
+        <div class="case-card">
+            <div class="case-card-img">
+                <img src="images/xinxiang-chem-lab.png" alt="新乡十中化学实验室">
+                <div class="case-card-overlay"></div>
+            </div>
+            <div class="case-card-body">
+                <span class="case-tag">化学实验室</span>
+                <h3>中学化学通风实验室</h3>
+                <p>专业通风系统设计，岛式实验台布局，学科文化墙一体化呈现</p>
+            </div>
+        </div>
+        <div class="case-card">
+            <div class="case-card-img">
+                <img src="images/xinxiang-bio-prep2.png" alt="新乡十中生物仪器准备室">
+                <div class="case-card-overlay"></div>
+            </div>
+            <div class="case-card-body">
+                <span class="case-tag">生物准备室</span>
+                <h3>中学生物仪器准备室</h3>
+                <p>双通道宽敞布局，标准化仪器柜陈列，满足理化生全科准备需求</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== 合作优势 ===== -->
+<section class="section section-alt">
+    <div class="section-header">
+        <div class="section-tag">为什么选择我们</div>
+        <h2 class="section-title">合作优势</h2>
+        <p class="section-desc">专业、可靠、创新，值得信赖的教育科技合作伙伴</p>
+    </div>
+    <div class="advantages">
+        <div class="advantage-item">
+            <div class="advantage-num">6<span>+</span></div>
+            <h4>核心产品线</h4>
+            <p>覆盖实验室建设、智能感知、AI教学等全场景</p>
+        </div>
+        <div class="advantage-item">
+            <div class="advantage-num">1<span>对1</span></div>
+            <h4>专属方案定制</h4>
+            <p>根据学校实际需求，量身定制专业解决方案</p>
+        </div>
+        <div class="advantage-item">
+            <div class="advantage-num">全<span>程</span></div>
+            <h4>全程项目服务</h4>
+            <p>从规划设计到安装验收，一体化项目管理</p>
+        </div>
+        <div class="advantage-item">
+            <div class="advantage-num">7×12</div>
+            <h4>快速响应售后</h4>
+            <p>专业技术团队，快速响应，保障设备稳定运行</p>
+        </div>
+    </div>
+</section>
+
+<!-- ===== 联系我们 ===== -->
+<section class="contact-section" id="contact">
+    <div class="contact-inner">
+        <div class="contact-left">
+            <h2>联系我们<br>开始合作</h2>
+            <p>无论您是学校采购负责人、教研负责人，还是正在寻找教育科技解决方案的合作伙伴，欢迎随时联系我们，获取专属方案与报价。</p>
+            <div class="contact-items">
+                <div class="contact-item">
+                    <div class="contact-item-icon">
+                        <svg viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.3 1l-2.2 2.2z"/></svg>
+                    </div>
+                    <div class="contact-item-text">
+                        <div class="contact-item-label">联系人 / 电话</div>
+                        <div class="contact-item-value">朱德强 &nbsp;13592600688</div>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-item-icon">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                    </div>
+                    <div class="contact-item-text">
+                        <div class="contact-item-label">公司地址</div>
+                        <div class="contact-item-value">河南省郑州市商务外环路25号王鼎国际</div>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-item-icon">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                    </div>
+                    <div class="contact-item-text">
+                        <div class="contact-item-label">公司全称</div>
+                        <div class="contact-item-value">河南信育电子科技有限公司</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="contact-right">
+            <h3>获取专属方案</h3>
+            <p>填写信息，我们将在24小时内联系您</p>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>您的姓名</label>
+                    <input type="text" placeholder="请输入姓名">
+                </div>
+                <div class="form-group">
+                    <label>联系电话</label>
+                    <input type="tel" placeholder="请输入手机号">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>学校名称</label>
+                    <input type="text" placeholder="请输入学校全称">
+                </div>
+                <div class="form-group">
+                    <label>需求类型</label>
+                    <select>
+                        <option value="">请选择需求类型</option>
+                        <option>实验室整体建设</option>
+                        <option>PASCO传感器配置</option>
+                        <option>AI体育教学系统</option>
+                        <option>实验室升级改造</option>
+                        <option>其他需求</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>需求描述</label>
+                <textarea placeholder="请简单描述您的需求，如实验室类型、面积、预算等..."></textarea>
+            </div>
+            <button class="form-submit">提交需求，获取方案</button>
+        </div>
+    </div>
+</section>
+
+<!-- ===== Footer ===== -->
+<footer>
+    <div class="footer-logo">
+        <img class="footer-logo-img" src="logo/logo.png" alt="信育电子科技">
+        <span>河南信育电子科技有限公司</span>
+    </div>
+    <div>专注教育科技 · 赋能未来课堂 © 2024 All Rights Reserved</div>
+    <div>豫ICP备XXXXXXXX号</div>
+</footer>
+
+<script>
+    // 产品选项卡
+    function showProduct(key) {
+        document.querySelectorAll('.product-showcase').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        document.getElementById('prod-' + key).classList.add('active');
+        event.target.classList.add('active');
+    }
+
+    // 导航滚动效果
+    window.addEventListener('scroll', () => {
+        const nav = document.querySelector('.nav');
+        if (window.scrollY > 80) {
+            nav.style.background = 'rgba(15,45,87,.98)';
+        } else {
+            nav.style.background = 'rgba(15,45,87,.96)';
+        }
+    });
+
+    // 进场动画
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.direction-card, .product-card-v2, .case-card, .advantage-item').forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(20px)';
+        el.style.transition = 'opacity .5s ease, transform .5s ease';
+        observer.observe(el);
+    });
+</script>
+</body>
+</html>
